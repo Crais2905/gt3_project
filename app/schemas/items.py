@@ -5,14 +5,18 @@ from .collections import CollectionPublic
 #image_path
 #
 
-class ItemCreate(BaseModel):
+class ItemBase(BaseModel):
     name: str = Field(max_length=100)
     description: str = Field(max_length=5)
     year: int
     status: Status
-    price: int
+    price: float
     user_id: int
     collection_id: int
+
+
+class ItemCreate(ItemBase):
+    pass
 
 
 class ItemUpdate(BaseModel):
@@ -20,7 +24,7 @@ class ItemUpdate(BaseModel):
     description: Optional[str]
     year: Optional[int]
     status: Optional[Status]
-    price: Optional[int]
+    price: Optional[float]
     image_path: Optional[str]
     user_id: Optional[int]
     collection_id: Optional[int]

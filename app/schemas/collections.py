@@ -2,9 +2,13 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
-class CollectionCreate(BaseModel):
+class CollectionBase(BaseModel):
     name: str = Field(max_length=100) 
     user_id: str
+
+
+class CollectionCreate(BaseModel):
+    pass
 
 
 class CollectionUpdate(BaseModel):
