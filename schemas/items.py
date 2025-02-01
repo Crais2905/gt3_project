@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from ..enums.items import Status
+from enums.items import Status
 from .collections import CollectionPublic
 #image_path
 #
