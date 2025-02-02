@@ -4,7 +4,7 @@ from typing import Optional
 
 class CollectionBase(BaseModel):
     name: str = Field(max_length=100) 
-    user_id: str
+    user_id: int
 
 
 class CollectionCreate(BaseModel):
