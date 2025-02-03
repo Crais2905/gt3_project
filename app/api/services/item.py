@@ -4,13 +4,25 @@ from sqlalchemy import update, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from ...models.models import Collection, Item
 from schemas.items import ItemCreate, ItemUpdate, ItemPublic
-from db.session import get_session
-
+from ...db import get_session
+from typing import List
 
 
 class ItemCrud:
     def __init__(self, session: AsyncSession = Depends(get_session)):
         self.session = session
+
+    async def get_items(
+            self,
+            offset: int = 0,
+            limit: int = 10,
+            filters: List = []
+    ):
+        stmt = select(Item)
+        if filters:
+            stmt = stmt.where(*filters)
+        stmt = stmt.offset(offset).limit(limit)
+        return await self.session.scalars(stmt)
 
     async def get_item(self, item_id: int):
         stmt = select(Item).where(Item.id == item_id)
