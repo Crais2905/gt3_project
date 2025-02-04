@@ -2,8 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from enums.items import Status
 from .collections import CollectionPublic
-#image_path
-#
+import uuid
 
 class ItemBase(BaseModel):
     name: str = Field(max_length=100)
@@ -11,7 +10,7 @@ class ItemBase(BaseModel):
     year: int
     status: Status
     price: float
-    user_id: int
+    user_id: uuid.UUID
     collection_id: int
 
 
@@ -26,7 +25,7 @@ class ItemUpdate(BaseModel):
     status: Optional[Status]
     price: Optional[float]
     image_path: Optional[str]
-    user_id: Optional[int]
+    user_id: Optional[uuid.UUID]
     collection_id: Optional[int]
 
 
