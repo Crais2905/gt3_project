@@ -31,4 +31,5 @@ class ItemUpdate(BaseModel):
 
 class ItemPublic(ItemCreate):
     id: int
-    image_path: str
+    image_path: Optional[str]
+    collection: CollectionPublic

@@ -1,6 +1,6 @@
 from fastapi import Query
 from typing import Optional
-from ..models.models import Item
+from models.models import Item
 
 
 def item_filters(
@@ -18,7 +18,7 @@ def item_filters(
     if year:
         filters.append(Item.year == year)
     if min_price:
-        filters.append(Item.price == min_price)
+        filters.append(Item.price > min_price)
     if max_price:
-        filters.append(Item.price == max_price)
+        filters.append(Item.price < max_price)
     return filters
