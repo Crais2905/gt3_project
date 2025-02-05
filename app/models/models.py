@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import String, Integer, ForeignKey, Text, Numeric, Enum, UUID
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base, relationship
 from fastapi_users.db import SQLAlchemyBaseUserTable
-from ..enums.items import Status
+from enums.items import Status
 
 
 Base = declarative_base()

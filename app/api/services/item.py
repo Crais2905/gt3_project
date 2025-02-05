@@ -2,9 +2,9 @@ from fastapi import Depends
 from sqlalchemy.future import select
 from sqlalchemy import update, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from ...models.models import Collection, Item
+from models.models import Collection, Item
 from schemas.items import ItemCreate, ItemUpdate, ItemPublic
-from ...db import get_session
+from db import get_session
 from typing import List
 
 

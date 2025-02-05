@@ -3,16 +3,16 @@ from typing import Optional
 import uuid
 
 class CollectionBase(BaseModel):
-    name: str = Field(max_length=100) 
+    title: str = Field(max_length=100) 
     user_id: uuid.UUID
 
 
-class CollectionCreate(BaseModel):
+class CollectionCreate(CollectionBase):
     pass
 
 
 class CollectionUpdate(BaseModel):
-    name: Optional[str]
+    title: Optional[str]
     user_id: Optional[uuid.UUID]
 
 

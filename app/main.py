@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from .db import engine
-from .models.models import Base
-
+from db import engine
+from models.models import Base
+from api.collection.collection import router as collection_router 
+from api.user.auth import router as auth_router
 
 
 app = FastAPI()
@@ -12,3 +13,7 @@ app = FastAPI()
 async def on_startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+
+app.include_router(collection_router, prefix="/collections", tags=["collections"])
+app.include_router(auth_router, tags=["auth"])
