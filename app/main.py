@@ -15,6 +15,7 @@ async def on_startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
+app.mount('/static', StaticFiles(directory='static'), name='static')
 
 app.include_router(collection_router, prefix="/collections", tags=["collections"])
 app.include_router(auth_router, tags=["auth"])

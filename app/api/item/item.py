@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import os
+import uuid
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile
 from sqlalchemy.future import select
 from schemas.items import ItemCreate, ItemPublic, ItemUpdate
 from ..services.item import  ItemCrud
@@ -62,3 +64,24 @@ async def part_update_item(item_id: int, item_data: ItemUpdate, item_crud: ItemC
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
     result = await item_crud.update_item(item_id, item_data)
     return result 
+
+
+@router.patch('/image/{item_id}', response_model=ItemPublic)
+async def add_item_image(item_id: int, image: UploadFile, item_crud: ItemCrud = Depends(ItemCrud)):
+    item = await item_crud.get_item(item_id)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
+    
+    file_extension = image.filename.split('.')[-1]
+    if file_extension not in ['jpg', 'png', 'jpeg']:
+        raise HTTPException(status_code=400, detail="Unsupported extension")
+    
+    file_path = os.path.join('static', f'{uuid.uuid4()}.{file_extension}')
+    with open(file_path, 'wb') as file:
+        file.write(image.file.read())
+
+    item.image_path = file_path
+    item_crud.session.add(item)
+    await item_crud.session.commit()
+    await item_crud.session.refresh(item)
+    return item
