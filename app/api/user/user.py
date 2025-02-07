@@ -29,6 +29,8 @@ class UserManager(BaseUserManager[User, uuid.UUID]):
     async def on_after_request_verify(self, user, token, request: Optional[Request] = None):
         print(f'User: {user.email} sent verification request. Token: {token}')
 
+    def parse_id(self, user_uuid: str) -> str: 
+        return user_uuid
 
 async def get_user_manager(user_db=Depends(get_user_db)):
     yield UserManager(user_db)

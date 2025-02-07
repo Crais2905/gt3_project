@@ -2,8 +2,9 @@ from fastapi import Depends
 from sqlalchemy.future import select
 from sqlalchemy import update, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from models.models import Collection, Item
+from models.models import Collection, Item, User
 from schemas.items import ItemCreate, ItemUpdate, ItemPublic
+from ..user.user import current_active_user
 from db import get_session
 from typing import List
 
@@ -29,8 +30,8 @@ class ItemCrud:
         return await self.session.scalar(stmt)
     
 
-    async def create_item(self, item_data: ItemCreate):
-        stmt = insert(Item).values(item_data.model_dump()).returning(Item)
+    async def create_item(self, item_data: ItemCreate, user_id: int):
+        stmt = insert(Item).values(**item_data.model_dump(), user_id=user_id).returning(Item)
         result = await self.session.execute(stmt)
         await self.session.commit()
         created_book = result.scalar()

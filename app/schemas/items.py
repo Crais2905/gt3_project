@@ -6,16 +6,14 @@ import uuid
 
 class ItemBase(BaseModel):
     name: str = Field(max_length=100)
-    description: str = Field(max_length=5)
+    description: str = Field(max_length=500)
     year: int
     status: Status
     price: float
-    user_id: uuid.UUID
-    collection_id: int
-
+    
 
 class ItemCreate(ItemBase):
-    pass
+    collection_id: int
 
 
 class ItemUpdate(BaseModel):
@@ -31,5 +29,6 @@ class ItemUpdate(BaseModel):
 
 class ItemPublic(ItemCreate):
     id: int
+    user_id: uuid.UUID
     image_path: Optional[str]
     collection: CollectionPublic

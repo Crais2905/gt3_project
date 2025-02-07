@@ -3,13 +3,14 @@ from sqlalchemy.future import select
 from schemas.items import ItemCreate, ItemPublic, ItemUpdate
 from ..services.item import  ItemCrud
 from utils.filters import item_filters
-
+from ..user.user import current_active_user
+from models.models import User
 router = APIRouter()
 
 
 @router.post('/', response_model=ItemPublic, status_code=status.HTTP_201_CREATED)
-async def create_item(item_data: ItemCreate, item_crud: ItemCrud = Depends(ItemCrud)):
-    result = await item_crud.create_item(item_data)
+async def create_item(item_data: ItemCreate, item_crud: ItemCrud = Depends(ItemCrud), user: User = Depends(current_active_user)):
+    result = await item_crud.create_item(item_data, user.id)
     return result
 
 
