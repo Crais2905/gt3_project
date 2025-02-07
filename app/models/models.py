@@ -3,7 +3,7 @@ from sqlalchemy import String, Integer, ForeignKey, Text, Numeric, Enum, UUID
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base, relationship
 from fastapi_users.db import SQLAlchemyBaseUserTable
 from enums.items import Status
-
+from typing import Optional
 
 Base = declarative_base()
 
@@ -26,7 +26,7 @@ class Item(Base):
     year: Mapped[int] = mapped_column(Integer, nullable=True)
     status: Mapped['Status'] = mapped_column(Enum(Status), nullable=False)
     price: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
-    image_path: Mapped[str] = mapped_column(String, nullable=True)
+    image_path: Mapped[Optional[str]]
     user_id: Mapped[uuid.UUID] = mapped_column(UUID, ForeignKey('users.id'), nullable=False)
     user: Mapped['User'] = relationship("User", back_populates='items', lazy='selectin')
     collection_id: Mapped[int] = mapped_column(Integer, ForeignKey('collections.id'), nullable=False)
