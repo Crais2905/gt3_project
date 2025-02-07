@@ -43,3 +43,21 @@ async def delete_item(item_id: int, item_crud: ItemCrud = Depends(ItemCrud)):
         )
     await item_crud.delete_item(item_id)
     return
+
+
+@router.put('/{item_id}', response_model=ItemPublic)
+async def full_update_item(item_id: int, item_data: ItemCreate, item_crud: ItemCrud = Depends(ItemCrud)):
+    item = await item_crud.get_item(item_id)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
+    result = await item_crud.update_item(item_id, item_data)
+    return result
+
+
+@router.patch('/{item_id}', response_model=ItemPublic)
+async def part_update_item(item_id: int, item_data: ItemUpdate, item_crud: ItemCrud = Depends(ItemCrud)):
+    item = await item_crud.get_item(item_id)
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
+    result = await item_crud.update_item(item_id, item_data)
+    return result 

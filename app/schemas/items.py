@@ -19,14 +19,14 @@ class ItemCreate(ItemBase):
 
 
 class ItemUpdate(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    year: Optional[int]
-    status: Optional[Status]
-    price: Optional[float]
-    image_path: Optional[str]
-    user_id: Optional[uuid.UUID]
-    collection_id: Optional[int]
+    name: Optional[str] = None
+    description: Optional[str] = None
+    year: Optional[int] = None
+    status: Optional[Status] = None
+    price: Optional[float] = None
+    image_path: Optional[str] = None
+    user_id: Optional[uuid.UUID] = None
+    collection_id: Optional[int] = None
 
 
 class ItemPublic(ItemCreate):
