@@ -6,7 +6,7 @@ from schemas.items import ItemCreate, ItemPublic, ItemUpdate
 from ..services.item import  ItemCrud
 from utils.filters import item_filters
 from ..user.user import current_active_user
-from models.models import User
+from models.models import Item, User
 router = APIRouter()
 
 
@@ -23,6 +23,19 @@ async def get_items(
     filters: dict = Depends(item_filters),
     item_crud: ItemCrud = Depends(ItemCrud)
 ):
+    print(filters)
+    result = await item_crud.get_items(offset, limit, filters)
+    return result
+
+@router.get('/my', response_model=list[ItemPublic])
+async def get_items(
+    offset: int = 0,
+    limit: int = 10,
+    filters: dict = Depends(item_filters),
+    item_crud: ItemCrud = Depends(ItemCrud),
+    user: User = Depends(current_active_user)
+):  
+    filters.append(Item.user_id == user.id)
     result = await item_crud.get_items(offset, limit, filters)
     return result
 
