@@ -23,7 +23,6 @@ async def get_items(
     filters: dict = Depends(item_filters),
     item_crud: ItemCrud = Depends(ItemCrud)
 ):
-    print(filters)
     result = await item_crud.get_items(offset, limit, filters)
     return result
 

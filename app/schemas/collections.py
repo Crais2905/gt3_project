@@ -4,7 +4,6 @@ import uuid
 
 class CollectionBase(BaseModel):
     title: str = Field(max_length=100) 
-    user_id: uuid.UUID
 
 
 class CollectionCreate(CollectionBase):
@@ -13,8 +12,8 @@ class CollectionCreate(CollectionBase):
 
 class CollectionUpdate(BaseModel):
     title: Optional[str]
-    user_id: Optional[uuid.UUID]
 
 
-class CollectionPublic(CollectionCreate):
+class CollectionPublic(CollectionBase):
     id: int
+    user_id: uuid.UUID

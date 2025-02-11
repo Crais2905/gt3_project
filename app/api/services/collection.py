@@ -14,8 +14,11 @@ class CollectionCrud:
     ):
         self.session = session
 
-    async def get_collections(self, offset: int = 0, limit: int = 3) -> list[CollectionPublic]:
-        stmt = select(Collection).offset(offset).limit(limit)
+    async def get_collections(self, offset: int, limit: int, filters: list = []) -> list[CollectionPublic]:
+        stmt = select(Collection)
+        if filters:
+            stmt = stmt.where(*filters)
+        stmt = stmt.offset(offset).limit(limit)
         result = await self.session.scalars(stmt)
         return result.all()
 
@@ -24,8 +27,8 @@ class CollectionCrud:
         result = await self.session.scalar(stmt)
         return result
 
-    async def create_collection(self, collection_data: CollectionCreate):
-        stmt = insert(Collection).values(collection_data.model_dump()).returning(Collection)
+    async def create_collection(self, collection_data: CollectionCreate, user_id: str):
+        stmt = insert(Collection).values(**collection_data.model_dump(), user_id=user_id).returning(Collection)
         result = await self.session.execute(stmt)
         await self.session.commit()
         result_orm = result.scalar()

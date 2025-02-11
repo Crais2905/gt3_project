@@ -1,6 +1,6 @@
 from fastapi import Query
 from typing import Optional
-from models.models import Item
+from models.models import Item, Collection
 
 
 def item_filters(
@@ -21,4 +21,14 @@ def item_filters(
         filters.append(Item.price > min_price)
     if max_price:
         filters.append(Item.price < max_price)
+    return filters
+
+
+
+def collection_filters(
+    title: Optional[str]  = Query(None, description='Filter by title')
+):
+    filters = []
+    if title:
+        filters.append(Collection.title.ilike(f"%{title}%"))
     return filters
