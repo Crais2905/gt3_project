@@ -1,5 +1,4 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from decouple import config
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from config import get_engine
 
 
