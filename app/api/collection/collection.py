@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from schemas.collections import CollectionCreate, CollectionUpdate, CollectionPublic
 from ..services.collection import CollectionCrud
 from utils.filters import collection_filters
-from models.models import User
+from models.models import User, Collection
 from api.user.auth import current_active_user
 from typing import List
 
@@ -16,6 +16,19 @@ async def create_collection(
     user: User = Depends(current_active_user)):
     collection = await collection_crud.create_collection(collection_data=collection_data, user_id=user.id)
     return collection
+
+
+@router.get('/my', response_model=List[CollectionPublic])
+async def get_collections(
+    offset: int = 0, 
+    limit: int = 5, 
+    collection_crud: CollectionCrud = Depends(CollectionCrud),
+    filters: dict = Depends(collection_filters),
+    user: User = Depends(current_active_user)
+):  
+    filters.append(Collection.user_id == user.id)
+    result = await collection_crud.get_collections(offset, limit, filters)
+    return result
 
 
 @router.get('/', response_model=List[CollectionPublic])

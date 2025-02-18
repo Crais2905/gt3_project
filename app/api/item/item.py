@@ -106,7 +106,7 @@ async def part_update_item(
     return result 
 
 
-@router.patch('/image/{item_id}', response_model=ItemPublic)
+@router.patch('/{item_id}/image', response_model=ItemPublic)
 async def add_item_image(
     item_id: int,
     image: UploadFile, 
