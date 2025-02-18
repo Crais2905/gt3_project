@@ -4,11 +4,12 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 from db import get_session
+from models.models import Base
 from main import app
-from ..models.models import Base
 from decouple import config
 
-engine = create_async_engine(config('DATABASE_URL'), connect_args={"check_same_thread": False})
+
+engine = create_async_engine(config('TEST_DATABASE_URL'))
 
 TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
