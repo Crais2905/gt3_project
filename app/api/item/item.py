@@ -20,6 +20,9 @@ async def create_item(
 ):
     collection_id = item_data.model_dump()['collection_id']
     collection = await collection_crud.get_collection(collection_id)
+
+    if not collection:
+       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Collection not found')
     if collection.user_id != user.id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="It's not your collection")
 
@@ -34,6 +37,8 @@ async def get_items(
     filters: dict = Depends(item_filters),
     item_crud: ItemCrud = Depends(ItemCrud)
 ):
+    if offset < 0 or limit < 0: 
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="offset and limit must be greater than 0")
     result = await item_crud.get_items(offset, limit, filters)
     return result
 
@@ -45,6 +50,9 @@ async def get_items(
     item_crud: ItemCrud = Depends(ItemCrud),
     user: User = Depends(current_active_user)
 ):  
+    if offset < 0 or limit < 0: 
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="offset and limit must be greater than 0")
+
     filters.append(Item.user_id == user.id)
     result = await item_crud.get_items(offset, limit, filters)
     return result
@@ -77,9 +85,19 @@ async def full_update_item(
     item_id: int,
     item_data: ItemCreate, 
     item_crud: ItemCrud = Depends(ItemCrud),
-    user: User = Depends(current_active_user)
+    user: User = Depends(current_active_user),
+    collection_crud: CollectionCrud = Depends(CollectionCrud)
 ):
     item = await item_crud.get_item(item_id)
+
+    collection_id = item_data.model_dump()['collection_id']
+    collection = await collection_crud.get_collection(collection_id)
+
+    if not collection:
+       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Collection not found')
+    if collection.user_id != user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="It's not your collection")
+
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
     if item.user_id != user.id:
@@ -94,9 +112,19 @@ async def part_update_item(
     item_id: int,
     item_data: ItemUpdate,
     item_crud: ItemCrud = Depends(ItemCrud),
-    user: User = Depends(current_active_user)
+    user: User = Depends(current_active_user),
+    collection_crud: CollectionCrud = Depends(CollectionCrud)
 ):
     item = await item_crud.get_item(item_id)
+
+    collection_id = item_data.model_dump()['collection_id']
+    collection = await collection_crud.get_collection(collection_id)
+    if collection_id:
+        if not collection:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Collection not found')
+        if collection.user_id != user.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="It's not your collection")        
+
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Item not found')
     if item.user_id != user.id:

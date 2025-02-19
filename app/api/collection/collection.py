@@ -26,6 +26,9 @@ async def get_collections(
     filters: dict = Depends(collection_filters),
     user: User = Depends(current_active_user)
 ):  
+    if offset < 0 or limit < 0: 
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="offset and limit must be greater than 0")
+    
     filters.append(Collection.user_id == user.id)
     result = await collection_crud.get_collections(offset, limit, filters)
     return result
@@ -38,6 +41,9 @@ async def get_collections(
     collection_crud: CollectionCrud = Depends(CollectionCrud),
     filters: dict = Depends(collection_filters)
 ):
+    if offset < 0 or limit < 0: 
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="offset and limit must be greater than 0")
+    
     result = await collection_crud.get_collections(offset, limit, filters)
     return result
 

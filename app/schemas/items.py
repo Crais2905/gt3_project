@@ -9,7 +9,7 @@ class ItemBase(BaseModel):
     description: str = Field(max_length=500)
     year: int
     status: Status
-    price: float = Field(gt=0)
+    price: float = Field(ge=0)
     
 
 class ItemCreate(ItemBase):
